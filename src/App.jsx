@@ -1,3 +1,4 @@
+import { useState } from "react";
 import './App.css'
 import InputSection from "./components/InputSection";
 import Slider from "./components/Slider";
@@ -5,7 +6,22 @@ import SliderWrapper from "./components/SliderWrapper";
 import ShapeSection from "./components/ShapeSection";
 import TextInput from "./components/TextInput";
 import Toggle from "./components/Toggle";
-function App() {
+
+
+const App = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const handleColorChange = () => {
+    const newDarkMode = !darkMode;
+    if (newDarkMode) {
+      document.documentElement.style.setProperty('--c-bg', '#0D0D0C');
+      document.documentElement.style.setProperty('--c-fg', '#F2F2E6');
+    } else {
+      document.documentElement.style.setProperty('--c-fg', '#0D0D0C');
+      document.documentElement.style.setProperty('--c-bg', '#F2F2E6');
+    }
+    setDarkMode(newDarkMode)
+  }
 
   return (
     <>
@@ -18,7 +34,7 @@ function App() {
           gap: "3rem"
         }}>
           <TextInput label="title" />
-          <Toggle label="mode" />
+          <Toggle label="mode" value={darkMode} onChange={setDarkMode} onValueChange={handleColorChange} />
         </div>
         <InputSection title="shapes">
           <SliderWrapper>

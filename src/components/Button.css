@@ -11,7 +11,7 @@ button {
     border: var(--c-fg) 2px solid;
     background-color: var(--c-bg);
     color: var(--c-fg);
-    transition: all 0.25s;
+    transition: background-color 0.25s, color 0.25s, border-color 0.25s;
     cursor: pointer;
 }
 
