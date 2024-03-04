@@ -1,0 +1,12 @@
+input[type="text"] {
+    appearance: none;
+    outline: none;
+    border: none;
+    width: 100%;
+    border-bottom: 2px solid var(--c-fg);
+    background-color: var(--c-bg);
+}
+
+input[type="text"]:focus {
+    border-bottom-width: 4px;
+}
