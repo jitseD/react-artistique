@@ -23,6 +23,7 @@ const App = () => {
     { id: "shape5", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
     { id: "shape6", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
   ]);
+  const [lines, setLines] = useState({ total: 10, rotation: 0 });
 
   const handleColorModeChange = () => {
     const newDarkMode = !darkMode;
@@ -53,6 +54,17 @@ const App = () => {
     setShapes(newShapes)
   };
 
+  const handleTotalLinesChange = (v) => {
+    const newLines = { ...lines };
+    newLines.total = parseInt(v);
+    setLines(newLines)
+  }
+  const handleRotationLinesChange = (v) => {
+    const newLines = { ...lines };
+    newLines.rotation = parseInt(v);
+    setLines(newLines)
+  }
+
   return (
     <>
       <h1 className="title">React Artistique</h1>
@@ -80,8 +92,8 @@ const App = () => {
         </InputSection>
         <InputSection title="lines">
           <SliderWrapper>
-            <Slider min={0} max={10} label="number of lines" />
-            <Slider min={0} max={10} label="rotation" />
+            <Slider min={5} max={15} value={lines.total} onValueChange={(v) => handleTotalLinesChange(v)} label="number of lines" />
+            <Slider min={0} max={360} value={lines.rotation} onValueChange={(v) => handleRotationLinesChange(v)} label="rotation" />
           </SliderWrapper>
         </InputSection>
         <InputSection title="frame">
