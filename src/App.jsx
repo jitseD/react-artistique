@@ -24,6 +24,7 @@ const App = () => {
     { id: "shape6", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
   ]);
   const [lines, setLines] = useState({ total: 10, rotation: 0 });
+  const [frame, setFrame] = useState({ margin: 40, dashes: 10 });
 
   const handleColorModeChange = () => {
     const newDarkMode = !darkMode;
@@ -65,6 +66,17 @@ const App = () => {
     setLines(newLines)
   }
 
+  const handleFrameMarginChange = (v) => {
+    const newFrame = { ...frame };
+    newFrame.margin = parseInt(v);
+    setFrame(newFrame)
+  }
+  const handleFrameDashesChange = (v) => {
+    const newFrame = { ...frame };
+    newFrame.dashes = parseInt(v);
+    setFrame(newFrame)
+  }
+
   return (
     <>
       <h1 className="title">React Artistique</h1>
@@ -98,8 +110,8 @@ const App = () => {
         </InputSection>
         <InputSection title="frame">
           <SliderWrapper>
-            <Slider min={0} max={10} label="margin" />
-            <Slider min={0} max={10} label="dash array" />
+            <Slider min={20} max={50} value={frame.margin} onValueChange={(v) => handleFrameMarginChange(v)} label="margin" />
+            <Slider min={0} max={50} value={frame.dashes} onValueChange={(v) => handleFrameDashesChange(v)} label="dash array" />
           </SliderWrapper>
         </InputSection>
       </div>

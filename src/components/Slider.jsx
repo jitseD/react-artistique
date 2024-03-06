@@ -18,8 +18,8 @@ Slider.propTypes = {
     label: PropTypes.string,
     min: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
-    value: PropTypes.number,
-    onValueChange: PropTypes.func,
+    value: PropTypes.number.isRequired,
+    onValueChange: PropTypes.func.isRequired,
 };
 
 export default Slider
