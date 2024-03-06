@@ -6,10 +6,10 @@ const Slider = ({ min, max, value, onValueChange, label }) => {
         label ? (
             <label className="slider__label" htmlFor={label}>
                 {label}
-                <input type="range" min={min} max={max} value={value} onChange={(e) => onValueChange(e.target.value)} id={label} />
+                <input type="range" min={min} max={max} value={value} onChange={(e) => onValueChange(parseInt(e.target.value))} id={label} />
             </label>
         ) : (
-            <input type="range" min={min} max={max} value={value} onChange={(e) => onValueChange(e.target.value)} />
+            <input type="range" min={min} max={max} value={value} onChange={(e) => onValueChange(parseInt(e.target.value))} />
         )
     )
 }

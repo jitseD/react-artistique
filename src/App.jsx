@@ -9,10 +9,6 @@ import Toggle from "./components/Toggle";
 
 
 const App = () => {
-  const canvas = {
-    width: 100,
-    height: 100
-  }
   const [darkMode, setDarkMode] = useState(false);
   const [title, setTitle] = useState("");
   const [shapes, setShapes] = useState([
@@ -38,43 +34,20 @@ const App = () => {
     setDarkMode(newDarkMode);
   }
 
-  const handleSizeChange = (i, v) => {
-    const newShapes = [...shapes];
-    newShapes[i].size = parseInt(v);
-    setShapes(newShapes)
-  };
-  const handleColorChange = (i, v) => {
-    const newShapes = [...shapes];
-    newShapes[i].color = v;
-    setShapes(newShapes)
-  };
-  const handlePositionChange = (i) => {
-    const newShapes = [...shapes];
-    newShapes[i].pos.x = Math.random() * canvas.width;
-    newShapes[i].pos.y = Math.random() * canvas.height;
-    setShapes(newShapes)
-  };
-
-  const handleTotalLinesChange = (v) => {
-    const newLines = { ...lines };
-    newLines.total = parseInt(v);
-    setLines(newLines)
-  }
-  const handleRotationLinesChange = (v) => {
-    const newLines = { ...lines };
-    newLines.rotation = parseInt(v);
-    setLines(newLines)
-  }
-
-  const handleFrameMarginChange = (v) => {
-    const newFrame = { ...frame };
-    newFrame.margin = parseInt(v);
-    setFrame(newFrame)
-  }
-  const handleFrameDashesChange = (v) => {
-    const newFrame = { ...frame };
-    newFrame.dashes = parseInt(v);
-    setFrame(newFrame)
+  const handleValueChange = (type, property, value) => {
+    switch (type) {
+      case `shapes`:
+        setShapes(shapes.map((shape, i) => (i === value.index ? { ...shape, [property]: value.value } : shape)));
+        console.log(shapes[0].pos);
+        break;
+      case `lines`:
+        setLines({ ...lines, [property]: value });
+        break;
+      case `frame`:
+        setFrame({ ...frame, [property]: value });
+        break;
+      default: break;
+    }
   }
 
   return (
@@ -95,23 +68,23 @@ const App = () => {
             {shapes.map((shape, i) => (
               <ShapeSection
                 key={shape.id}
-                size={shape.size} onSliderChange={(v) => handleSizeChange(i, v)}
-                color={shape.color} onColorChange={(v) => handleColorChange(i, v)}
-                onReposition={() => handlePositionChange(i)}
+                size={shape.size} onSliderChange={(v) => handleValueChange(`shapes`, `size`, { index: i, value: v })}
+                color={shape.color} onColorChange={(v) => handleValueChange(`shapes`, `color`, { index: i, value: v })}
+                onReposition={(v) => handleValueChange(`shapes`, `pos`, { index: i, value: v })}
               />
             ))}
           </SliderWrapper>
         </InputSection>
         <InputSection title="lines">
           <SliderWrapper>
-            <Slider min={5} max={15} value={lines.total} onValueChange={(v) => handleTotalLinesChange(v)} label="number of lines" />
-            <Slider min={0} max={360} value={lines.rotation} onValueChange={(v) => handleRotationLinesChange(v)} label="rotation" />
+            <Slider min={5} max={15} value={lines.total} onValueChange={(v) => handleValueChange(`lines`, `total`, v)} label="number of lines" />
+            <Slider min={0} max={360} value={lines.rotation} onValueChange={(v) => handleValueChange(`lines`, `rotation`, v)} label="rotation" />
           </SliderWrapper>
         </InputSection>
         <InputSection title="frame">
           <SliderWrapper>
-            <Slider min={20} max={50} value={frame.margin} onValueChange={(v) => handleFrameMarginChange(v)} label="margin" />
-            <Slider min={0} max={50} value={frame.dashes} onValueChange={(v) => handleFrameDashesChange(v)} label="dash array" />
+            <Slider min={20} max={50} value={frame.margin} onValueChange={(v) => handleValueChange(`frame`, `margin`, v)} label="margin" />
+            <Slider min={0} max={50} value={frame.dashes} onValueChange={(v) => handleValueChange(`frame`, `dashes`, v)} label="dash array" />
           </SliderWrapper>
         </InputSection>
       </div>
