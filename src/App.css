@@ -37,6 +37,11 @@ body,
     place-items: center;
 }
 
+*::selection {
+    background-color: var(--c-fg);
+    color: var(--c-bg);
+}
+
 .title {
     grid-column: 1/-1;
     grid-row: 1;
@@ -46,6 +51,11 @@ body,
     color: #F2F2E6;
     mix-blend-mode: difference;
     rotate: -90deg;
+}
+
+.title::selection {
+    background-color: #F2F2E6;
+    color: #0D0D0C;
 }
 
 .frame {
@@ -83,9 +93,4 @@ label {
     font-family: sans-serif;
     color: var(--c-fg);
     transition: color 0.25s;
-}
-
-*::selection {
-    background-color: #F2F2E6;
-    color: #000000;
 }

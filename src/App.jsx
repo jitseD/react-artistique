@@ -1,14 +1,16 @@
-import { useState } from "react";
-import './App.css'
+import { useState, useContext } from "react";
+import { canvas } from "./context/CanvasContext";
 import InputSection from "./components/InputSection";
 import Slider from "./components/Slider";
 import SliderWrapper from "./components/SliderWrapper";
 import ShapeSection from "./components/ShapeSection";
 import TextInput from "./components/TextInput";
 import Toggle from "./components/Toggle";
+import './App.css'
 
 
 const App = () => {
+  const canvasContext = useContext(canvas);
   const [darkMode, setDarkMode] = useState(false);
   const [title, setTitle] = useState("");
   const [shapes, setShapes] = useState([
@@ -19,8 +21,8 @@ const App = () => {
     { id: "shape5", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
     { id: "shape6", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
   ]);
-  const [lines, setLines] = useState({ total: 10, rotation: 0 });
-  const [frame, setFrame] = useState({ margin: 40, dashes: 10 });
+  const [lines, setLines] = useState({ total: 10, rotation: 0 });         // random total / rotation
+  const [frame, setFrame] = useState({ margin: 40, dashes: 10 });         // random margin / dashes
 
   const handleColorModeChange = () => {
     const newDarkMode = !darkMode;
@@ -53,7 +55,7 @@ const App = () => {
     <>
       <h1 className="title">React Artistique</h1>
       <div className="frame">
-        <svg viewBox={`0 0 ${window.innerWidth / 2 - 120} ${window.innerHeight - 120}`}>
+        <svg viewBox={`0 0 ${canvasContext.width} ${canvasContext.height}`}>
           <defs>
             <mask id="frame">
               <rect
@@ -62,7 +64,7 @@ const App = () => {
                 rx="5"
               />
               <rect
-                x="20" y="20" width={window.innerWidth / 2 - 160} height={window.innerHeight - 160}
+                x={frame.margin} y={frame.margin} width={canvasContext.width - frame.margin * 2} height={canvasContext.height - frame.margin * 2}
                 fill="#000000"
                 rx="5"
               />
@@ -76,14 +78,14 @@ const App = () => {
           <rect
             mask="url(#frame)"
             x="0" y="0" width="100%" height="100%"
-            fill="#0D0D0D"
+            fill="#0D0D0C"
             opacity="0.5"
             rx="5"
           />
           <rect
-            x="10" y="10" width={window.innerWidth / 2 - 140} height={window.innerHeight - 140}
+            x={frame.margin / 2} y={frame.margin / 2} width={canvasContext.width - frame.margin} height={canvasContext.height - frame.margin}
             fill="none"
-            stroke="#0D0D0D" strokeWidth="2" strokeDasharray="20"
+            stroke="#0D0D0C" strokeWidth="2" strokeDasharray={frame.dashes}
             rx="5"
           />
         </svg>
@@ -117,7 +119,7 @@ const App = () => {
         </InputSection>
         <InputSection title="frame">
           <SliderWrapper>
-            <Slider min={20} max={50} value={frame.margin} onValueChange={(v) => handleValueChange(`frame`, `margin`, v)} label="margin" />
+            <Slider min={40} max={80} value={frame.margin} onValueChange={(v) => handleValueChange(`frame`, `margin`, v)} label="margin" />
             <Slider min={0} max={50} value={frame.dashes} onValueChange={(v) => handleValueChange(`frame`, `dashes`, v)} label="dash array" />
           </SliderWrapper>
         </InputSection>
