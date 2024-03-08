@@ -3,38 +3,51 @@ import { canvas } from "./context/CanvasContext";
 import InputSection from "./components/InputSection";
 import Slider from "./components/Slider";
 import SliderWrapper from "./components/SliderWrapper";
+import Shape from "./components/Shape";
 import ShapeSection from "./components/ShapeSection";
 import TextInput from "./components/TextInput";
 import Toggle from "./components/Toggle";
 import './App.css'
 
+const generateRandomShape = (id, canvasContext) => {
+  const randomSize = Math.floor(Math.random() * 150) + 50;
+  const randomColor = `#${Math.floor(Math.random() * 0x1000000).toString(16).padStart(6, '0')}`;
+  const randomX = Math.floor(Math.random() * canvasContext.width);
+  const randomY = Math.floor(Math.random() * canvasContext.height);
+  const randomTypeCircle = Math.random() < 0.5;
+
+  return { id, size: randomSize, color: randomColor, pos: { x: randomX, y: randomY }, typeCircle: randomTypeCircle };
+}
+
 
 const App = () => {
   const canvasContext = useContext(canvas);
   const [darkMode, setDarkMode] = useState(false);
+  const [colorMode, setColorMode] = useState({ foreground: "#0D0D0C", background: "#F2F2E6" });
   const [title, setTitle] = useState("");
-  const [shapes, setShapes] = useState([
-    { id: "shape1", size: 50, color: "#ff0000", pos: { x: 10, y: 100 }, typeCircle: true },         // random pos
-    { id: "shape2", size: 80, color: "#00ff00", pos: { x: 30, y: 200 }, typeCircle: true },         // random size
-    { id: "shape3", size: 100, color: "#0000ff", pos: { x: 40, y: 250 }, typeCircle: true },         // random color
-    { id: "shape4", size: 130, color: "#ffff00", pos: { x: 50, y: 120 }, typeCircle: true },         // random type
-    { id: "shape5", size: 150, color: "#ff00ff", pos: { x: 60, y: 130 }, typeCircle: false },
-    { id: "shape6", size: 200, color: "#00ffff", pos: { x: 70, y: 230 }, typeCircle: false },
-  ]);
   const [lines, setLines] = useState({ total: 10, rotation: 0 });                 // random total / rotation
   const [frame, setFrame] = useState({ margin: 40, dashes: 10 });                 // random margin / dashes
-
+  const [shapes, setShapes] = useState([
+    generateRandomShape("shape1", canvasContext),
+    generateRandomShape("shape2", canvasContext),
+    generateRandomShape("shape3", canvasContext),
+    generateRandomShape("shape4", canvasContext),
+    generateRandomShape("shape5", canvasContext),
+    generateRandomShape("shape6", canvasContext),
+  ]);
   const handleColorModeChange = () => {
     const newDarkMode = !darkMode;
     if (newDarkMode) {
-      document.documentElement.style.setProperty('--c-bg', '#0D0D0C');
-      document.documentElement.style.setProperty('--c-fg', '#F2F2E6');
+      setColorMode({ foreground: "#F2F2E6", background: "#0D0D0C" })
     } else {
-      document.documentElement.style.setProperty('--c-fg', '#0D0D0C');
-      document.documentElement.style.setProperty('--c-bg', '#F2F2E6');
+      setColorMode({ foreground: "#0D0D0C", background: "#F2F2E6" })
     }
     setDarkMode(newDarkMode);
   }
+
+  document.documentElement.style.setProperty('--c-fg', colorMode.foreground);
+  document.documentElement.style.setProperty('--c-bg', colorMode.background);
+
 
   const handleValueChange = (type, property, value) => {
     switch (type) {
@@ -57,18 +70,6 @@ const App = () => {
       <div className="frame">
         <svg viewBox={`0 0 ${canvasContext.width} ${canvasContext.height}`}>
           <defs>
-            <mask id="frame">
-              <rect
-                x="0" y="0" width="100%" height="100%"
-                fill="#FFFFFF"
-                rx="5"
-              />
-              <rect
-                x={frame.margin} y={frame.margin} width={canvasContext.width - frame.margin * 2} height={canvasContext.height - frame.margin * 2}
-                fill="#000000"
-                rx="5"
-              />
-            </mask>
             <mask id="canvas">
               <rect
                 x={frame.margin} y={frame.margin} width={canvasContext.width - frame.margin * 2} height={canvasContext.height - frame.margin * 2}
@@ -77,47 +78,28 @@ const App = () => {
               />
             </mask>
           </defs>
-          <rect
+          <rect // background
             x="0" y="0" width="100%" height="100%"
-            fill="#F2F2E6"
+            fill={colorMode.background}
             rx="5"
           />
 
-          {shapes.map((value) => {
-            if (value.typeCircle) {
-              return (<circle
-                mask="url(#canvas)"
-                key={value.id}
-                cx={value.pos.x}
-                cy={value.pos.y}
-                r={value.size}
-                fill={value.color}
-                stroke="none"
-              />)
-            } else {
-              return (<rect
-                mask="url(#canvas)"
-                key={value.id}
-                x={value.pos.x}
-                y={value.pos.y}
-                width={value.size}
-                height={value.size}
-                fill={value.color}
-                stroke="none"
-              />)
-            }
-          })}
-          <rect
-            mask="url(#frame)"
-            x="0" y="0" width="100%" height="100%"
-            fill="#0D0D0C"
-            opacity="0.5"
+          {shapes.map((value) => (
+            <Shape key={value.id} value={value} colorMode={colorMode} />
+          ))}
+
+
+          <rect // frame
+            className="shadow--frame"
+            x={0 + frame.margin / 2} y={0 + frame.margin / 2} width={canvasContext.width - frame.margin} height={canvasContext.height - frame.margin}
+            fill="none"
+            stroke={colorMode.background} strokeWidth={frame.margin}
             rx="5"
           />
-          <rect
+          <rect // dash
             x={frame.margin / 2} y={frame.margin / 2} width={canvasContext.width - frame.margin} height={canvasContext.height - frame.margin}
             fill="none"
-            stroke="#0D0D0C" strokeWidth="2" strokeDasharray={frame.dashes}
+            stroke={colorMode.foreground} strokeWidth="2" strokeDasharray={frame.dashes}
             rx="5"
           />
         </svg>
