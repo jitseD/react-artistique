@@ -12,9 +12,9 @@ const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [title, setTitle] = useState("");
   const [shapes, setShapes] = useState([
-    { id: "shape1", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
-    { id: "shape2", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
-    { id: "shape3", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
+    { id: "shape1", size: 0, color: "#000000", pos: { x: 0, y: 0 } },     // random pos
+    { id: "shape2", size: 0, color: "#000000", pos: { x: 0, y: 0 } },     // random size
+    { id: "shape3", size: 0, color: "#000000", pos: { x: 0, y: 0 } },     // random color
     { id: "shape4", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
     { id: "shape5", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
     { id: "shape6", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
@@ -38,7 +38,6 @@ const App = () => {
     switch (type) {
       case `shapes`:
         setShapes(shapes.map((shape, i) => (i === value.index ? { ...shape, [property]: value.value } : shape)));
-        console.log(shapes[0].pos);
         break;
       case `lines`:
         setLines({ ...lines, [property]: value });
@@ -53,7 +52,42 @@ const App = () => {
   return (
     <>
       <h1 className="title">React Artistique</h1>
-      <div className="frame"></div>
+      <div className="frame">
+        <svg viewBox={`0 0 ${window.innerWidth / 2 - 120} ${window.innerHeight - 120}`}>
+          <defs>
+            <mask id="frame">
+              <rect
+                x="0" y="0" width="100%" height="100%"
+                fill="#FFFFFF"
+                rx="5"
+              />
+              <rect
+                x="20" y="20" width={window.innerWidth / 2 - 160} height={window.innerHeight - 160}
+                fill="#000000"
+                rx="5"
+              />
+            </mask>
+          </defs>
+          <rect
+            x="0" y="0" width="100%" height="100%"
+            fill="#F2F2E6"
+            rx="5"
+          />
+          <rect
+            mask="url(#frame)"
+            x="0" y="0" width="100%" height="100%"
+            fill="#0D0D0D"
+            opacity="0.5"
+            rx="5"
+          />
+          <rect
+            x="10" y="10" width={window.innerWidth / 2 - 140} height={window.innerHeight - 140}
+            fill="none"
+            stroke="#0D0D0D" strokeWidth="2" strokeDasharray="20"
+            rx="5"
+          />
+        </svg>
+      </div>
       <div className="inputs">
         <div style={{
           display: "flex",

@@ -7,7 +7,7 @@ const Button = ({ name, onClickButton }) => {
     const canvasContext = useContext(canvas);
 
     const handleButtonClick = () => {
-        const pos = { x: Math.random() * canvasContext.width, y: Math.random() * canvasContext.heigth }
+        const pos = { x: Math.random() * canvasContext.width, y: Math.random() * canvasContext.height }
         onClickButton(pos)
     }
 

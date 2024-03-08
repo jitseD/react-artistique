@@ -84,3 +84,8 @@ label {
     color: var(--c-fg);
     transition: color 0.25s;
 }
+
+*::selection {
+    background-color: #F2F2E6;
+    color: #000000;
+}
