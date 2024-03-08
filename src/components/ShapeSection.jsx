@@ -7,7 +7,7 @@ import "./ShapeSection.css";
 const ShapeSection = ({ size, onSliderChange, color, onColorChange, onReposition }) => {
     return (
         <article>
-            <Slider min={0} max={10} value={size} onValueChange={onSliderChange} />
+            <Slider min={50} max={200} value={size} onValueChange={onSliderChange} />
             <Button name="reposition" onClickButton={onReposition} />
             <ColorPicker value={color} onValueChange={onColorChange} />
         </article>

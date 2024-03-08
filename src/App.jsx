@@ -14,15 +14,15 @@ const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [title, setTitle] = useState("");
   const [shapes, setShapes] = useState([
-    { id: "shape1", size: 0, color: "#000000", pos: { x: 0, y: 0 } },     // random pos
-    { id: "shape2", size: 0, color: "#000000", pos: { x: 0, y: 0 } },     // random size
-    { id: "shape3", size: 0, color: "#000000", pos: { x: 0, y: 0 } },     // random color
-    { id: "shape4", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
-    { id: "shape5", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
-    { id: "shape6", size: 0, color: "#000000", pos: { x: 0, y: 0 } },
+    { id: "shape1", size: 50, color: "#ff0000", pos: { x: 10, y: 100 }, typeCircle: true },         // random pos
+    { id: "shape2", size: 80, color: "#00ff00", pos: { x: 30, y: 200 }, typeCircle: true },         // random size
+    { id: "shape3", size: 100, color: "#0000ff", pos: { x: 40, y: 250 }, typeCircle: true },         // random color
+    { id: "shape4", size: 130, color: "#ffff00", pos: { x: 50, y: 120 }, typeCircle: true },         // random type
+    { id: "shape5", size: 150, color: "#ff00ff", pos: { x: 60, y: 130 }, typeCircle: false },
+    { id: "shape6", size: 200, color: "#00ffff", pos: { x: 70, y: 230 }, typeCircle: false },
   ]);
-  const [lines, setLines] = useState({ total: 10, rotation: 0 });         // random total / rotation
-  const [frame, setFrame] = useState({ margin: 40, dashes: 10 });         // random margin / dashes
+  const [lines, setLines] = useState({ total: 10, rotation: 0 });                 // random total / rotation
+  const [frame, setFrame] = useState({ margin: 40, dashes: 10 });                 // random margin / dashes
 
   const handleColorModeChange = () => {
     const newDarkMode = !darkMode;
@@ -69,12 +69,44 @@ const App = () => {
                 rx="5"
               />
             </mask>
+            <mask id="canvas">
+              <rect
+                x={frame.margin} y={frame.margin} width={canvasContext.width - frame.margin * 2} height={canvasContext.height - frame.margin * 2}
+                fill="#FFFFFF"
+                rx="5"
+              />
+            </mask>
           </defs>
           <rect
             x="0" y="0" width="100%" height="100%"
             fill="#F2F2E6"
             rx="5"
           />
+
+          {shapes.map((value) => {
+            if (value.typeCircle) {
+              return (<circle
+                mask="url(#canvas)"
+                key={value.id}
+                cx={value.pos.x}
+                cy={value.pos.y}
+                r={value.size}
+                fill={value.color}
+                stroke="none"
+              />)
+            } else {
+              return (<rect
+                mask="url(#canvas)"
+                key={value.id}
+                x={value.pos.x}
+                y={value.pos.y}
+                width={value.size}
+                height={value.size}
+                fill={value.color}
+                stroke="none"
+              />)
+            }
+          })}
           <rect
             mask="url(#frame)"
             x="0" y="0" width="100%" height="100%"
