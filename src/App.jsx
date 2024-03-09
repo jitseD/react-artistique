@@ -1,39 +1,66 @@
 import { useState, useContext } from "react";
 import { canvas } from "./context/CanvasContext";
 import InputSection from "./components/InputSection";
+import Lines from "./components/Lines";
+import Shape from "./components/Shape";
 import Slider from "./components/Slider";
 import SliderWrapper from "./components/SliderWrapper";
-import Shape from "./components/Shape";
 import ShapeSection from "./components/ShapeSection";
 import TextInput from "./components/TextInput";
 import Toggle from "./components/Toggle";
 import './App.css'
 
-const generateRandomShape = (id, canvasContext) => {
+
+const generateRandomFrame = () => {
+  const margin = Math.floor(Math.random() * 40) + 40;
+  const dashes = Math.floor(Math.random() * 50);
+  return { margin, dashes }
+}
+
+const generateRandomLines = () => {
+  const total = Math.floor(Math.random() * 10) + 5;
+  const rotation = Math.floor(Math.random() * 360);
+
+  return { total, rotation };
+}
+
+const generateRandomLinePattern = (id, canvasContext, margin) => {
+  const randomX = Math.floor(Math.random() * canvasContext.width + margin) - margin * 2;
+  const randomY = Math.floor(Math.random() * canvasContext.height + margin) - margin * 2;
+
+  return { id, pos: { x: randomX, y: randomY } };
+}
+
+
+const generateRandomShape = (id, canvasContext, margin) => {
   const randomSize = Math.floor(Math.random() * 150) + 50;
   const randomColor = `#${Math.floor(Math.random() * 0x1000000).toString(16).padStart(6, '0')}`;
-  const randomX = Math.floor(Math.random() * canvasContext.width);
-  const randomY = Math.floor(Math.random() * canvasContext.height);
+  const randomX = Math.floor(Math.random() * canvasContext.width + margin) - margin * 2;
+  const randomY = Math.floor(Math.random() * canvasContext.height + margin) - margin * 2;
   const randomTypeCircle = Math.random() < 0.5;
 
   return { id, size: randomSize, color: randomColor, pos: { x: randomX, y: randomY }, typeCircle: randomTypeCircle };
 }
-
 
 const App = () => {
   const canvasContext = useContext(canvas);
   const [darkMode, setDarkMode] = useState(false);
   const [colorMode, setColorMode] = useState({ foreground: "#0D0D0C", background: "#F2F2E6" });
   const [title, setTitle] = useState("");
-  const [lines, setLines] = useState({ total: 10, rotation: 0 });                 // random total / rotation
-  const [frame, setFrame] = useState({ margin: 40, dashes: 10 });                 // random margin / dashes
+  const [frame, setFrame] = useState(generateRandomFrame());
+  const [lines, setLines] = useState(generateRandomLines());
+  const [linesPattern, setLinesPattern] = useState([
+    generateRandomLinePattern("line1", canvasContext, frame.margin),
+    generateRandomLinePattern("line2", canvasContext, frame.margin),
+    generateRandomLinePattern("line3", canvasContext, frame.margin),
+  ]);
   const [shapes, setShapes] = useState([
-    generateRandomShape("shape1", canvasContext),
-    generateRandomShape("shape2", canvasContext),
-    generateRandomShape("shape3", canvasContext),
-    generateRandomShape("shape4", canvasContext),
-    generateRandomShape("shape5", canvasContext),
-    generateRandomShape("shape6", canvasContext),
+    generateRandomShape("shape1", canvasContext, frame.margin),
+    generateRandomShape("shape2", canvasContext, frame.margin),
+    generateRandomShape("shape3", canvasContext, frame.margin),
+    generateRandomShape("shape4", canvasContext, frame.margin),
+    generateRandomShape("shape5", canvasContext, frame.margin),
+    generateRandomShape("shape6", canvasContext, frame.margin),
   ]);
   const handleColorModeChange = () => {
     const newDarkMode = !darkMode;
@@ -83,14 +110,17 @@ const App = () => {
             fill={colorMode.background}
             rx="5"
           />
+          {linesPattern.map(linePattern => (
+            <Lines key={linePattern.id} linePattern={linePattern} lines={lines} colorMode={colorMode} />
+          ))}
+
 
           {shapes.map((value) => (
             <Shape key={value.id} value={value} colorMode={colorMode} />
           ))}
 
-
           <rect // frame
-            className="shadow--frame"
+            className={`${darkMode ? 'shadow__frame--darkmode' : 'shadow__frame'}`}
             x={0 + frame.margin / 2} y={0 + frame.margin / 2} width={canvasContext.width - frame.margin} height={canvasContext.height - frame.margin}
             fill="none"
             stroke={colorMode.background} strokeWidth={frame.margin}
