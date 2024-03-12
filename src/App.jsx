@@ -1,8 +1,7 @@
 import { useState, useContext } from "react";
 import { canvas } from "./context/CanvasContext";
+import Canvas from "./components/Canvas";
 import InputSection from "./components/InputSection";
-import Lines from "./components/Lines";
-import Shape from "./components/Shape";
 import Slider from "./components/Slider";
 import SliderWrapper from "./components/SliderWrapper";
 import ShapeSection from "./components/ShapeSection";
@@ -44,12 +43,11 @@ const generateRandomShape = (id, canvasContext, margin) => {
 
 const App = () => {
   const canvasContext = useContext(canvas);
-  const [darkMode, setDarkMode] = useState(false);
-  const [colorMode, setColorMode] = useState({ foreground: "#0D0D0C", background: "#F2F2E6" });
+  const [colorMode, setColorMode] = useState({ darkMode: false, foreground: "#0D0D0C", background: "#F2F2E6" });
   const [title, setTitle] = useState("");
   const [frame, setFrame] = useState(generateRandomFrame());
   const [lines, setLines] = useState(generateRandomLines());
-  const [linesPattern, setLinesPattern] = useState([
+  const [linesPattern] = useState([
     generateRandomLinePattern("line1", canvasContext, frame.margin),
     generateRandomLinePattern("line2", canvasContext, frame.margin),
     generateRandomLinePattern("line3", canvasContext, frame.margin),
@@ -62,14 +60,18 @@ const App = () => {
     generateRandomShape("shape5", canvasContext, frame.margin),
     generateRandomShape("shape6", canvasContext, frame.margin),
   ]);
+
   const handleColorModeChange = () => {
-    const newDarkMode = !darkMode;
-    if (newDarkMode) {
-      setColorMode({ foreground: "#F2F2E6", background: "#0D0D0C" })
+    const newColorMode = structuredClone(colorMode);
+    newColorMode.darkMode = !colorMode.darkMode
+    if (newColorMode.darkMode) {
+      newColorMode.foreground = "#F2F2E6";
+      newColorMode.background = "#0D0D0C";
     } else {
-      setColorMode({ foreground: "#0D0D0C", background: "#F2F2E6" })
+      newColorMode.foreground = "#0D0D0C";
+      newColorMode.background = "#F2F2E6";
     }
-    setDarkMode(newDarkMode);
+    setColorMode(newColorMode)
   }
 
   document.documentElement.style.setProperty('--c-fg', colorMode.foreground);
@@ -95,44 +97,13 @@ const App = () => {
     <>
       <h1 className="title">React Artistique</h1>
       <div className="frame">
-        <svg viewBox={`0 0 ${canvasContext.width} ${canvasContext.height}`}>
-          <defs>
-            <mask id="canvas">
-              <rect
-                x={frame.margin} y={frame.margin} width={canvasContext.width - frame.margin * 2} height={canvasContext.height - frame.margin * 2}
-                fill="#FFFFFF"
-                rx="5"
-              />
-            </mask>
-          </defs>
-          <rect // background
-            x="0" y="0" width="100%" height="100%"
-            fill={colorMode.background}
-            rx="5"
-          />
-          {linesPattern.map(linePattern => (
-            <Lines key={linePattern.id} linePattern={linePattern} lines={lines} colorMode={colorMode} />
-          ))}
-
-
-          {shapes.map((value) => (
-            <Shape key={value.id} value={value} colorMode={colorMode} />
-          ))}
-
-          <rect // frame
-            className={`${darkMode ? 'shadow__frame--darkmode' : 'shadow__frame'}`}
-            x={0 + frame.margin / 2} y={0 + frame.margin / 2} width={canvasContext.width - frame.margin} height={canvasContext.height - frame.margin}
-            fill="none"
-            stroke={colorMode.background} strokeWidth={frame.margin}
-            rx="5"
-          />
-          <rect // dash
-            x={frame.margin / 2} y={frame.margin / 2} width={canvasContext.width - frame.margin} height={canvasContext.height - frame.margin}
-            fill="none"
-            stroke={colorMode.foreground} strokeWidth="2" strokeDasharray={frame.dashes}
-            rx="5"
-          />
-        </svg>
+        <Canvas
+          frame={frame}
+          linesPattern={linesPattern} lines={lines}
+          shapes={shapes}
+          title={title}
+          colorMode={colorMode}
+        />
       </div>
       <div className="inputs">
         <div style={{
@@ -141,7 +112,7 @@ const App = () => {
           gap: "3rem"
         }}>
           <TextInput label="title" value={title} onValueChange={(v) => setTitle(v)} />
-          <Toggle label="mode" value={darkMode} onValueChange={handleColorModeChange} />
+          <Toggle label="mode" value={colorMode.darkMode} onValueChange={handleColorModeChange} />
         </div>
         <InputSection title="shapes">
           <SliderWrapper>

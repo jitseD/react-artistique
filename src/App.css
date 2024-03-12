@@ -100,3 +100,7 @@ label {
     color: var(--c-fg);
     transition: color 0.25s;
 }
+
+svg {
+    border-radius: 5px;
+}
