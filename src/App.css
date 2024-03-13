@@ -104,3 +104,18 @@ label {
 svg {
     border-radius: 5px;
 }
+
+.intro__wrapper {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    gap: 1.5rem 3rem;
+    width: 100%
+}
+
+.chips__wrapper {
+    grid-column: 1/-1;
+    grid-row: 2;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}

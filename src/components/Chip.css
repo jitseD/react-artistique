@@ -1,0 +1,22 @@
+.chip {
+    width: 100%;
+    padding: 1rem;
+    display: grid;
+    place-items: center;
+    border: 2px solid;
+    border-radius: 100px;
+    transition: background-color 0.25s;
+}
+
+.chip--false {
+    background-color: var(--c-bg);
+    color: var(--c-fg);
+}
+.chip--true {
+    background-color: var(--c-fg);
+    color: var(--c-bg);
+}
+
+.chip:hover {
+    cursor: pointer;
+}

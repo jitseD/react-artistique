@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { canvas } from "./context/CanvasContext";
 import Canvas from "./components/Canvas";
+import Chip from "./components/Chip";
 import InputSection from "./components/InputSection";
 import Slider from "./components/Slider";
 import SliderWrapper from "./components/SliderWrapper";
@@ -9,6 +10,10 @@ import TextInput from "./components/TextInput";
 import Toggle from "./components/Toggle";
 import './App.css'
 
+
+const generateRandomBool = () => {
+  return Math.random() < 0.5
+}
 
 const generateRandomFrame = () => {
   const margin = Math.floor(Math.random() * 40) + 40;
@@ -19,7 +24,6 @@ const generateRandomFrame = () => {
 const generateRandomLines = () => {
   const total = Math.floor(Math.random() * 10) + 5;
   const rotation = Math.floor(Math.random() * 360);
-
   return { total, rotation };
 }
 
@@ -36,7 +40,7 @@ const generateRandomShape = (id, canvasContext, margin) => {
   const randomColor = `#${Math.floor(Math.random() * 0x1000000).toString(16).padStart(6, '0')}`;
   const randomX = Math.floor(Math.random() * canvasContext.width + margin) - margin * 2;
   const randomY = Math.floor(Math.random() * canvasContext.height + margin) - margin * 2;
-  const randomTypeCircle = Math.random() < 0.5;
+  const randomTypeCircle = generateRandomBool();
 
   return { id, size: randomSize, color: randomColor, pos: { x: randomX, y: randomY }, typeCircle: randomTypeCircle };
 }
@@ -44,8 +48,13 @@ const generateRandomShape = (id, canvasContext, margin) => {
 const App = () => {
   const canvasContext = useContext(canvas);
   const [colorMode, setColorMode] = useState({ darkMode: false, foreground: "#0D0D0C", background: "#F2F2E6" });
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("React Artistique");
   const [frame, setFrame] = useState(generateRandomFrame());
+  const [styling, setStyling] = useState({
+    dropShadow: generateRandomBool(),
+    gradient: generateRandomBool(),
+    grain: generateRandomBool()
+  });
   const [lines, setLines] = useState(generateRandomLines());
   const [linesPattern] = useState([
     generateRandomLinePattern("line1", canvasContext, frame.margin),
@@ -77,6 +86,11 @@ const App = () => {
   document.documentElement.style.setProperty('--c-fg', colorMode.foreground);
   document.documentElement.style.setProperty('--c-bg', colorMode.background);
 
+  const handleStylingChange = (property) => {
+    const newStyling = structuredClone(styling);
+    newStyling[property] = !styling[property]
+    setStyling(newStyling)
+  }
 
   const handleValueChange = (type, property, value) => {
     switch (type) {
@@ -93,6 +107,7 @@ const App = () => {
     }
   }
 
+
   return (
     <>
       <h1 className="title">React Artistique</h1>
@@ -103,16 +118,18 @@ const App = () => {
           shapes={shapes}
           title={title}
           colorMode={colorMode}
+          styling={styling}
         />
       </div>
       <div className="inputs">
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: "3rem"
-        }}>
+        <div className="intro__wrapper">
           <TextInput label="title" value={title} onValueChange={(v) => setTitle(v)} />
           <Toggle label="mode" value={colorMode.darkMode} onValueChange={handleColorModeChange} />
+          <div className="chips__wrapper">
+            <Chip name="drop shadow" value={styling.dropShadow} onClickChip={() => handleStylingChange("dropShadow")} />
+            <Chip name="gradient" value={styling.gradient} onClickChip={() => handleStylingChange("gradient")} />
+            <Chip name="grain" value={styling.grain} onClickChip={() => handleStylingChange("grain")} />
+          </div>
         </div>
         <InputSection title="shapes">
           <SliderWrapper>
