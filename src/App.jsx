@@ -82,7 +82,7 @@ const App = () => {
     }
     setColorMode(newColorMode)
   }
-
+  
   document.documentElement.style.setProperty('--c-fg', colorMode.foreground);
   document.documentElement.style.setProperty('--c-bg', colorMode.background);
 

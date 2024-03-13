@@ -8,15 +8,17 @@
     transition: background-color 0.25s;
 }
 
-.chip--false {
-    background-color: var(--c-bg);
-    color: var(--c-fg);
-}
-.chip--true {
+.chip--active {
     background-color: var(--c-fg);
     color: var(--c-bg);
 }
 
+.chip--inactive {
+    background-color: var(--c-bg);
+    color: var(--c-fg);
+}
+
 .chip:hover {
     cursor: pointer;
+    font-weight: 700;
 }

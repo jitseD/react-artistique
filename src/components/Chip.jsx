@@ -3,7 +3,7 @@ import "./Chip.css"
 
 const Chip = ({ name, value, onClickChip }) => {
     return (
-        <p className={`chip chip--${value}`} onClick={onClickChip}>{name}</p>
+        <p className={`chip ${value ? `chip--active` : `chip--inactive`}`} onClick={onClickChip}>{name}</p>
     )
 }
 

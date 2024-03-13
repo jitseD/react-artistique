@@ -1,26 +1,12 @@
 import PropTypes from "prop-types";
-import { useContext, useRef, useEffect } from "react";
+import { useContext } from "react";
 import { canvas } from "../context/CanvasContext";
+import Frame from "./Frame";
 import Lines from "./Lines";
 import Shape from "./Shape";
 
 const Canvas = ({ frame, linesPattern, lines, shapes, title, colorMode, styling }) => {
     const canvasContext = useContext(canvas);
-    const textRef = useRef(null);
-    const textBoxRef = useRef(null);
-
-    useEffect(() => {
-        const textBBox = textRef.current.getBBox();
-        const textBoxAttributes = {
-            x: canvasContext.width - frame.margin - textBBox.width - 10,
-            y: canvasContext.height - frame.margin / 2 - textBBox.height / 2 - 5,
-            width: textBBox.width + 20,
-            height: textBBox.height + 10
-        }
-        Object.entries(textBoxAttributes).forEach(([attribute, value]) => {
-            textBoxRef.current.setAttribute(attribute, value);
-        })
-    }, [canvasContext, frame, title]);
 
     return (
         <svg viewBox={`0 0 ${canvasContext.width} ${canvasContext.height}`}>
@@ -45,27 +31,7 @@ const Canvas = ({ frame, linesPattern, lines, shapes, title, colorMode, styling 
                 <Shape key={value.id} value={value} colorMode={colorMode} styling={styling} />
             ))}
 
-            <rect // frame
-                className={`${styling.dropShadow ? colorMode.darkMode ? 'shadow__frame--darkmode' : 'shadow__frame' : ``}`}
-                x={0 + frame.margin / 2} y={0 + frame.margin / 2} width={canvasContext.width - frame.margin} height={canvasContext.height - frame.margin}
-                fill="none"
-                stroke={colorMode.background} strokeWidth={frame.margin}
-            />
-            <rect // dash
-                x={frame.margin / 2} y={frame.margin / 2} width={canvasContext.width - frame.margin} height={canvasContext.height - frame.margin}
-                fill="none"
-                stroke={colorMode.foreground} strokeWidth="2" strokeDasharray={frame.dashes}
-                rx="5"
-            />
-
-            <rect ref={textBoxRef} fill={colorMode.background} />
-            <text
-                ref={textRef}
-                fontSize={frame.margin / 2} fontFamily="Arial, Helvetica, sans-serif"
-                textAnchor="end" dominantBaseline="middle"
-                x={canvasContext.width - frame.margin} y={canvasContext.height - frame.margin / 2}
-                fill={colorMode.foreground}
-            >{title}</text>
+            <Frame styling={styling} colorMode={colorMode} frame={frame} title={title} />
         </svg>
     )
 }
