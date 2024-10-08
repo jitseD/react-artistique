@@ -1,8 +1,23 @@
-# React + Vite
+# React Artistique
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**React Artistique** is an SVG artwork generator built using React. The project allows users to dynamically create and customize SVG shapes and text by adjusting various properties such as color, position, and styling.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Dynamic Artwork Creation**: Users can modify shapes and lines, add a title and style the frame according to their preference.
+* **Customizable Properties**: Users can adjust the following properties in real-time:
+  * Color
+  * Position
+  * Size
+  * Rotation
+  * Text
+  * Frame
+* **Interactive Preview**: See changes instantly as you adjust properties.
+
+## Technologies Used
+
+* **Frontend**: React, JSX, CSS
+* **Bundling**: Vite
+
+The Result
+Create your own artwork at [jitsedekeyser.be/devine/react-artistique](https://www.jitsedekeyser.be/devine/react-artistique)
